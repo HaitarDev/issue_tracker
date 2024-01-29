@@ -4,7 +4,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -13,7 +12,10 @@ import IssueBadge from "./IssueBadge";
 import Link from "next/link";
 
 async function getIssues() {
-  const res = await fetch("http://localhost:3000/api/issues");
+  const res = await fetch("http://localhost:3000/api/issues", {
+    cache: "no-cache",
+    // next: { revalidate: 200 },
+  });
 
   const issues = res.json();
   return issues;
@@ -29,6 +31,7 @@ type Issue = {
 };
 async function IssuesTable() {
   const issues = await getIssues();
+  console.log(issues);
 
   return (
     <div className="w-10/12">

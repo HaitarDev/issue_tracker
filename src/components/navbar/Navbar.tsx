@@ -9,7 +9,7 @@ function Navbar() {
   return (
     <nav className="h-14 w-full border-b ">
       <div className="px-2 space-x-10 flex items-center h-full w-full ">
-        <h1 className="font-bold leading-tight uppercase text-red-800">
+        <h1 className="font-bold leading-tight uppercase text-primary">
           Issue Tracker
         </h1>
         <ul className="flex space-x-4 text-gray-800">
