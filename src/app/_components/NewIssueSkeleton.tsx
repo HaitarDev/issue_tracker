@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function NewIssueLoading() {
+function NewIssueSkeleton() {
   return (
     <div className="p-4 space-y-3 w-2/3">
       <div>
@@ -25,4 +25,4 @@ function NewIssueLoading() {
     </div>
   );
 }
-export default NewIssueLoading;
+export default NewIssueSkeleton;

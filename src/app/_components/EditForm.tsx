@@ -1,7 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
+import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 
 import { createIssueSchema } from "@/schema/createIssueSchema";
@@ -24,9 +23,6 @@ import { useRouter } from "next/navigation";
 
 type Issue = z.infer<typeof createIssueSchema>;
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
 function EditForm({ issue }: { issue?: Issue }) {
   const [loading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");

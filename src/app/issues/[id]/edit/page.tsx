@@ -1,4 +1,11 @@
-import EditForm from "@/app/_components/EditForm";
+import dynamic from "next/dynamic";
+
+import NewIssueSkeleton from "@/app/_components/NewIssueSkeleton";
+
+const EditForm = dynamic(() => import("@/app/_components/EditForm"), {
+  ssr: false,
+  loading: () => <NewIssueSkeleton />,
+});
 
 async function getIssue(id: string) {
   try {
