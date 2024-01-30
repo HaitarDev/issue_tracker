@@ -1,6 +1,7 @@
+import { ConfirmDeleteIssue } from "@/app/_components/ConfirmDeleteIssue";
 import IssueBadge from "@/components/issues/IssueBadge";
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Delete, Edit } from "lucide-react";
 import Link from "next/link";
 
 async function getIssue(id: string) {
@@ -29,15 +30,18 @@ async function IssuePage({ params }: { params: { id: string } }) {
         <div className="py-8 px-4 rounded-lg border ">{issue.description}</div>
       </div>
 
-      <Button>
-        <Link
-          className="flex gap-1 items-center"
-          href={`/issues/${issue.id}/edit`}
-        >
-          <Edit width={20} />
-          Edit issue
-        </Link>
-      </Button>
+      <div className="flex flex-col gap-4">
+        <Button>
+          <Link
+            className="flex gap-1 items-center"
+            href={`/issues/${issue.id}/edit`}
+          >
+            <Edit width={20} />
+            Edit issue
+          </Link>
+        </Button>
+        <ConfirmDeleteIssue id={params.id} />
+      </div>
     </div>
   );
 }
