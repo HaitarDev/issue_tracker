@@ -14,7 +14,6 @@ import Link from "next/link";
 async function getIssues() {
   const res = await fetch("http://localhost:3000/api/issues", {
     cache: "no-cache",
-    // next: { revalidate: 200 },
   });
 
   const issues = res.json();
