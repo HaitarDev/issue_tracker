@@ -1,4 +1,5 @@
 import { ConfirmDeleteIssue } from "@/app/_components/ConfirmDeleteIssue";
+import { SelectUserIssue } from "@/components/issues/Issue/SelectUserIssue";
 import IssueBadge from "@/components/issues/IssueBadge";
 import { Button } from "@/components/ui/button";
 import authOptions from "@/lib/AuthOptions";
@@ -33,6 +34,7 @@ async function IssuePage({ params }: { params: { id: string } }) {
         <div className="py-8 px-4 rounded-lg border ">{issue.description}</div>
       </div>
       <div className="flex flex-col gap-4">
+        <SelectUserIssue />
         {session && (
           <>
             <Button>
