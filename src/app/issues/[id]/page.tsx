@@ -1,7 +1,9 @@
 import { ConfirmDeleteIssue } from "@/app/_components/ConfirmDeleteIssue";
 import IssueBadge from "@/components/issues/IssueBadge";
 import { Button } from "@/components/ui/button";
-import { Delete, Edit } from "lucide-react";
+import authOptions from "@/lib/AuthOptions";
+import { Edit } from "lucide-react";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 
 async function getIssue(id: string) {
@@ -18,6 +20,7 @@ async function getIssue(id: string) {
 }
 async function IssuePage({ params }: { params: { id: string } }) {
   const issue = await getIssue(params.id);
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="flex gap-4 p-4 space-y-3 max-w-screen-xl ">
@@ -29,18 +32,21 @@ async function IssuePage({ params }: { params: { id: string } }) {
         </div>
         <div className="py-8 px-4 rounded-lg border ">{issue.description}</div>
       </div>
-
       <div className="flex flex-col gap-4">
-        <Button>
-          <Link
-            className="flex gap-1 items-center"
-            href={`/issues/${issue.id}/edit`}
-          >
-            <Edit width={20} />
-            Edit issue
-          </Link>
-        </Button>
-        <ConfirmDeleteIssue id={params.id} />
+        {session && (
+          <>
+            <Button>
+              <Link
+                className="flex gap-1 items-center"
+                href={`/issues/${issue.id}/edit`}
+              >
+                <Edit width={20} />
+                Edit issue
+              </Link>
+            </Button>
+            <ConfirmDeleteIssue id={params.id} />
+          </>
+        )}
       </div>
     </div>
   );

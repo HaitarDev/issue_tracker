@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 
 import prisma from "../../../../../prisma/client";
+import { getServerSession } from "next-auth";
+import authOptions from "@/lib/AuthOptions";
 
 export async function GET(req: NextRequest, context: any) {
   const { params } = context;
@@ -16,6 +18,11 @@ export async function GET(req: NextRequest, context: any) {
 }
 
 export async function PATCH(req: NextRequest, context: any) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    Response.json({ error: "You must be logged in" }, { status: 401 });
+  }
   const id = context.params.issueId;
   const newestIssue = await req.json();
   try {
@@ -40,6 +47,11 @@ export async function PATCH(req: NextRequest, context: any) {
 
 export async function DELETE(req: NextRequest, context: any) {
   const { params } = context;
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    Response.json({ error: "You must be logged in" }, { status: 401 });
+  }
 
   const currIssue = await prisma.issue.findUnique({
     where: { id: Number(params.issueId) },
