@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 export const createIssueSchema = z.object({
-  // id: z.number(),
   title: z.string().min(3).max(255),
   description: z.string().min(1),
-  // status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
-  // createdAt: z.date(),
-  // updatedAt: z.date(),
+});
+
+export const patchIssueSchema = z.object({
+  title: z.string().min(3).max(255).optional(),
+  description: z.string().min(1).optional(),
+  userId: z.string().optional().nullable(),
 });

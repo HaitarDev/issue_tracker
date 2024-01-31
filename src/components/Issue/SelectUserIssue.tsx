@@ -11,10 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
-import { User } from "@prisma/client";
+import { Issue, User } from "@prisma/client";
 import Skeleton from "react-loading-skeleton";
 
-export function SelectUserIssue() {
+export function SelectUserIssue({ issue }: { issue: Issue }) {
   const {
     data: users,
     isLoading,
@@ -34,15 +34,26 @@ export function SelectUserIssue() {
   if (error) return null;
 
   return (
-    <Select>
+    <Select
+      onValueChange={(val) => {
+        fetch(`/api/issues/${issue.id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ userId: val }),
+        }).then((res) => res.json());
+      }}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Assign a user" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Users</SelectLabel>
+
+          <SelectItem key={"unsign"} value={"null"}>
+            Unsign
+          </SelectItem>
           {users?.map((user) => (
-            <SelectItem key={user.id} value={user.name}>
+            <SelectItem key={user.id} value={user.id}>
               {user.name}
             </SelectItem>
           ))}

@@ -1,8 +1,9 @@
 import { ConfirmDeleteIssue } from "@/app/_components/ConfirmDeleteIssue";
-import { SelectUserIssue } from "@/components/issues/Issue/SelectUserIssue";
+import { SelectUserIssue } from "@/components/Issue/SelectUserIssue";
 import IssueBadge from "@/components/issues/IssueBadge";
 import { Button } from "@/components/ui/button";
 import authOptions from "@/lib/AuthOptions";
+import { Issue } from "@prisma/client";
 import { Edit } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -20,7 +21,7 @@ async function getIssue(id: string) {
   }
 }
 async function IssuePage({ params }: { params: { id: string } }) {
-  const issue = await getIssue(params.id);
+  const issue: Issue = await getIssue(params.id);
   const session = await getServerSession(authOptions);
 
   return (
@@ -34,7 +35,7 @@ async function IssuePage({ params }: { params: { id: string } }) {
         <div className="py-8 px-4 rounded-lg border ">{issue.description}</div>
       </div>
       <div className="flex flex-col gap-4">
-        <SelectUserIssue />
+        <SelectUserIssue issue={issue} />
         {session && (
           <>
             <Button>
