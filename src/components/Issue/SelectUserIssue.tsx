@@ -13,8 +13,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Issue, User } from "@prisma/client";
 import Skeleton from "react-loading-skeleton";
+import { useToast } from "../ui/use-toast";
 
 export function SelectUserIssue({ issue }: { issue: Issue }) {
+  const { toast } = useToast();
   const {
     data: users,
     isLoading,
@@ -33,14 +35,26 @@ export function SelectUserIssue({ issue }: { issue: Issue }) {
 
   if (error) return null;
 
+  const handleValueChange = async (val: any) => {
+    try {
+      const res = await fetch(`/api/issues/${issue.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ userId: val === "null" ? null : val }),
+      });
+      return await res.json();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "We cant update this issue",
+      });
+    }
+  };
+
   return (
     <Select
-      onValueChange={(val) => {
-        fetch(`/api/issues/${issue.id}`, {
-          method: "PATCH",
-          body: JSON.stringify({ userId: val }),
-        }).then((res) => res.json());
-      }}
+      onValueChange={handleValueChange}
+      defaultValue={issue.userId ?? "null"}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Assign a user" />
@@ -50,7 +64,7 @@ export function SelectUserIssue({ issue }: { issue: Issue }) {
           <SelectLabel>Users</SelectLabel>
 
           <SelectItem key={"unsign"} value={"null"}>
-            Unsign
+            Unassigned
           </SelectItem>
           {users?.map((user) => (
             <SelectItem key={user.id} value={user.id}>

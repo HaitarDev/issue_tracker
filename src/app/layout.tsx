@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import SessionAppProvider from "./_components/SessionAppProvider";
 import TanstackQueryClient from "./_components/TanstackQueryClient";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <main>{children}</main>
           </SessionAppProvider>
         </TanstackQueryClient>
+        <Toaster />
       </body>
     </html>
   );
