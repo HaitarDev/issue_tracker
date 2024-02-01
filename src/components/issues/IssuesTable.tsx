@@ -11,8 +11,13 @@ import {
 import IssueBadge from "./IssueBadge";
 import Link from "next/link";
 
-async function getIssues() {
-  const res = await fetch("http://localhost:3000/api/issues", {
+async function getIssues(status: Status | "ALL" | "") {
+  const fetchURL =
+    status === "ALL" || status === ""
+      ? "http://localhost:3000/api/issues"
+      : `http://localhost:3000/api/issues?status=${status}`;
+
+  const res = await fetch(fetchURL, {
     cache: "no-cache",
   });
 
@@ -28,8 +33,8 @@ type Issue = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-async function IssuesTable() {
-  const issues = await getIssues();
+async function IssuesTable({ status }: { status: Status | "ALL" }) {
+  const issues = await getIssues(status);
   console.log(issues);
 
   return (
