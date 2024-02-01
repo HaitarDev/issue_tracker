@@ -1,4 +1,5 @@
 import { Status } from "@prisma/client";
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -10,12 +11,18 @@ import {
 } from "../ui/table";
 import IssueBadge from "./IssueBadge";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-async function getIssues(status: Status | "ALL" | "") {
-  const fetchURL =
+async function getIssues(status: Status | "ALL" | "", sortBy: keyof Issue) {
+  const url = "http://localhost:3000/api/issues";
+  let fetchURL =
     status === "ALL" || status === ""
-      ? "http://localhost:3000/api/issues"
-      : `http://localhost:3000/api/issues?status=${status}`;
+      ? `${url}&sortBy=${sortBy}`
+      : `${url}?status=${status}&sortBy=${sortBy}`;
+
+  fetchURL = sortBy
+    ? `${url}?status=${status}&sortBy=${sortBy}`
+    : `${url}?status=${status}`;
 
   const res = await fetch(fetchURL, {
     cache: "no-cache",
@@ -25,7 +32,7 @@ async function getIssues(status: Status | "ALL" | "") {
   return issues;
 }
 
-type Issue = {
+export type Issue = {
   id: number;
   title: string;
   description?: string;
@@ -33,9 +40,25 @@ type Issue = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-async function IssuesTable({ status }: { status: Status | "ALL" }) {
-  const issues = await getIssues(status);
-  console.log(issues);
+async function IssuesTable({
+  status,
+  sortBy,
+}: {
+  status: Status | "ALL";
+  sortBy: keyof Issue;
+}) {
+  const issues = await getIssues(status, sortBy);
+
+  const sortedBy: { label: string; value: keyof Issue; className?: string }[] =
+    [
+      { label: "Title", value: "title" },
+      { label: "Status", value: "status", className: "hidden sm:table-cell " },
+      {
+        label: "Date Created",
+        value: "createdAt",
+        className: "hidden sm:table-cell",
+      },
+    ];
 
   return (
     <div>
@@ -43,14 +66,23 @@ async function IssuesTable({ status }: { status: Status | "ALL" }) {
         <TableCaption>A list of your recent issues.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="font-semibold bg-black/5">Title</TableHead>
-            <TableHead className="hidden sm:table-cell font-semibold bg-black/5">
-              Status
-            </TableHead>
-            <TableHead className="hidden sm:table-cell font-semibold bg-black/5">
-              {" "}
-              Date Created
-            </TableHead>
+            {sortedBy.map(({ label, value, className }) => (
+              <TableHead
+                key={value}
+                className={cn("font-semibold bg-black/5", className)}
+              >
+                <Link
+                  href={{
+                    query: {
+                      status: status,
+                      sortBy: value,
+                    },
+                  }}
+                >
+                  {label}
+                </Link>
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -64,17 +96,11 @@ async function IssuesTable({ status }: { status: Status | "ALL" }) {
                 <IssueBadge status={issue.status} />
               </TableCell>
               <TableCell className="hidden sm:table-cell">
-                {issue.createdAt}
+                {format(issue.createdAt!, "dd/MM/yyyy")}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
       </Table>
     </div>
   );

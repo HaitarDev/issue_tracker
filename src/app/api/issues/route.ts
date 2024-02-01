@@ -3,9 +3,8 @@ import prisma from "../../../../prisma/client";
 import { createIssueSchema } from "@/schema/createIssueSchema";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { UndoIcon } from "lucide-react";
+
 import { Status } from "@prisma/client";
-import { object } from "zod";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -33,13 +32,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const status = req.nextUrl.searchParams.get("status");
+  const sortBy = req.nextUrl.searchParams.get("sortBy") || "createdAt";
+  console.log(sortBy);
 
   const statusArr = Object.keys(Status);
 
   const filteredStatus = statusArr.includes(status!) ? status : undefined;
 
   const data = await prisma.issue.findMany({
-    where: { status: filteredStatus },
+    where: { status: filteredStatus! },
+    orderBy: {
+      [sortBy!]: "asc",
+    },
   });
 
   if (!data) return Response.json({ error: "No data found" }, { status: 404 });

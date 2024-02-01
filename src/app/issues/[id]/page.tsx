@@ -4,6 +4,7 @@ import IssueBadge from "@/components/issues/IssueBadge";
 import { Button } from "@/components/ui/button";
 import authOptions from "@/lib/AuthOptions";
 import { Issue } from "@prisma/client";
+import { format } from "date-fns";
 import { Edit } from "lucide-react";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -30,7 +31,7 @@ async function IssuePage({ params }: { params: { id: string } }) {
         <h1 className="font-semibold text-xl md:text-2xl ">{issue?.title}</h1>
         <div className="flex gap-6 ">
           <IssueBadge status={issue?.status} />
-          <p>{issue?.createdAt}</p>
+          <p>{format(issue.createdAt!, "dd/MM/yyyy")}</p>
         </div>
         <div className="py-8 px-4 rounded-lg border ">{issue.description}</div>
       </div>
