@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { SortByIssues } from "./SortByIssues";
 
 function IssuesAction() {
   return (
     <>
       <h1 className="text-2xl font-semibold space-y-3">Issues</h1>
-      <Button asChild>
-        <Link href={"/newIssue"}> CREATE</Link>
-      </Button>
+      <div className="flex justify-between">
+        <Button asChild>
+          <Link href={"/newIssue"}> CREATE</Link>
+        </Button>
+        <SortByIssues />
+      </div>
     </>
   );
 }

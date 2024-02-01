@@ -33,7 +33,7 @@ async function IssuesTable() {
   console.log(issues);
 
   return (
-    <div className="w-10/12">
+    <div>
       <Table>
         <TableCaption>A list of your recent issues.</TableCaption>
         <TableHeader>
