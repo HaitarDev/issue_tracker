@@ -13,6 +13,7 @@ import IssueBadge from "./IssueBadge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getIssues } from "@/app/actions/action";
+import { ArrowDown, ArrowDownRightSquareIcon } from "lucide-react";
 
 export type Issue = {
   id: number;
@@ -51,18 +52,34 @@ async function IssuesTable({
             {sortedBy.map(({ label, value, className }) => (
               <TableHead
                 key={value}
-                className={cn("font-semibold bg-black/5", className)}
+                className={cn("font-semibold bg-black/5 w-10", className)}
               >
-                <Link
-                  href={{
-                    query: {
-                      status: status,
-                      sortBy: value,
-                    },
-                  }}
-                >
-                  {label}
-                </Link>
+                {sortBy === value ? (
+                  <div className="flex items-center gap-1">
+                    <Link
+                      href={{
+                        query: {
+                          status: status,
+                          sortBy: value,
+                        },
+                      }}
+                    >
+                      {label}
+                    </Link>
+                    <ArrowDown width={20} />
+                  </div>
+                ) : (
+                  <Link
+                    href={{
+                      query: {
+                        status: status,
+                        sortBy: value,
+                      },
+                    }}
+                  >
+                    {label}
+                  </Link>
+                )}
               </TableHead>
             ))}
           </TableRow>
