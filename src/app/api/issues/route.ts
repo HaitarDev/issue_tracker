@@ -30,23 +30,25 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(newIssue, { status: 201 });
 }
 
-export async function GET(req: NextRequest) {
-  const status = req.nextUrl.searchParams.get("status");
-  const sortBy = req.nextUrl.searchParams.get("sortBy") || "createdAt";
-  console.log(sortBy);
+// Look at action.ts  ("server actions")
 
-  const statusArr = Object.keys(Status);
+// export async function GET(req: NextRequest) {
+//   const status = req.nextUrl.searchParams.get("status");
+//   const sortBy = req.nextUrl.searchParams.get("sortBy") || "createdAt";
+//   console.log(sortBy);
 
-  const filteredStatus = statusArr.includes(status!) ? status : undefined;
+//   const statusArr = Object.keys(Status);
 
-  const data = await prisma.issue.findMany({
-    where: { status: filteredStatus! },
-    orderBy: {
-      [sortBy!]: "asc",
-    },
-  });
+//   const filteredStatus = statusArr.includes(status!) ? status : undefined;
 
-  if (!data) return Response.json({ error: "No data found" }, { status: 404 });
+//   const data = await prisma.issue.findMany({
+//     where: { status: filteredStatus! },
+//     orderBy: {
+//       [sortBy!]: "asc",
+//     },
+//   });
 
-  return Response.json({ data: data }, { status: 200 });
-}
+//   if (!data) return Response.json({ error: "No data found" }, { status: 404 });
+
+//   return Response.json({ data: data }, { status: 200 });
+// }

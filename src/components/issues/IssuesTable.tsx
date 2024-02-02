@@ -12,25 +12,7 @@ import {
 import IssueBadge from "./IssueBadge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-async function getIssues(status: Status | "ALL" | "", sortBy: keyof Issue) {
-  const url = "http://localhost:3000/api/issues";
-  let fetchURL =
-    status === "ALL" || status === ""
-      ? `${url}&sortBy=${sortBy}`
-      : `${url}?status=${status}&sortBy=${sortBy}`;
-
-  fetchURL = sortBy
-    ? `${url}?status=${status}&sortBy=${sortBy}`
-    : `${url}?status=${status}`;
-
-  const res = await fetch(fetchURL, {
-    cache: "no-cache",
-  });
-
-  const issues = res.json();
-  return issues;
-}
+import { getIssues } from "@/app/actions/action";
 
 export type Issue = {
   id: number;
@@ -86,7 +68,7 @@ async function IssuesTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {issues.data.map((issue: Issue) => (
+          {issues.map((issue: Issue) => (
             <TableRow key={issue.id}>
               <TableCell className="font-medium">
                 <Link href={`/issues/${issue.id}`}>{issue.title}</Link>

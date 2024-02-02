@@ -6,7 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export function SortByIssues() {
   const router = useRouter();
-  const statusParams = useSearchParams().get("status");
+  const searchParams = useSearchParams();
+  const statusParams = searchParams.get("status");
+  const sortByParams = searchParams.get("sortBy");
 
   const sortBy: { label: string; value: Status }[] = [
     { label: "Open", value: "OPEN" },
@@ -15,7 +17,11 @@ export function SortByIssues() {
   ];
 
   const handleValueChange = (status: Status | "ALL") => {
-    const query = status !== "ALL" ? `?status=${status}` : "";
+    let query = status !== "ALL" ? `?status=${status}` : "";
+    console.log(query);
+    query = sortByParams
+      ? `${query}${!query ? "?" : "&"}sortBy=${sortByParams}`
+      : query;
     router.push(`/issues${query}`);
   };
   return (
