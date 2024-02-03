@@ -13,7 +13,10 @@ import IssueBadge from "./IssueBadge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getIssues } from "@/app/actions/action";
-import { ArrowDown, ArrowDownRightSquareIcon } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+import IssuesPagination from "./IssuesPagination";
+import { SORTED_BY } from "@/lib/SortedByMap";
+import { useSearchParams } from "next/navigation";
 
 export type Issue = {
   id: number;
@@ -23,33 +26,21 @@ export type Issue = {
   createdAt?: Date;
   updatedAt?: Date;
 };
-async function IssuesTable({
-  status,
-  sortBy,
-}: {
+
+type Props = {
   status: Status | "ALL";
   sortBy: keyof Issue;
-}) {
-  const issues = await getIssues(status, sortBy);
-
-  const sortedBy: { label: string; value: keyof Issue; className?: string }[] =
-    [
-      { label: "Title", value: "title" },
-      { label: "Status", value: "status", className: "hidden sm:table-cell " },
-      {
-        label: "Date Created",
-        value: "createdAt",
-        className: "hidden sm:table-cell",
-      },
-    ];
-
+  page: number;
+};
+async function IssuesTable({ status, sortBy, page }: Props) {
+  const issues = await getIssues(status, sortBy, page);
   return (
-    <div>
+    <div className="flex flex-col gap-5 items-center">
       <Table>
         <TableCaption>A list of your recent issues.</TableCaption>
         <TableHeader>
           <TableRow>
-            {sortedBy.map(({ label, value, className }) => (
+            {SORTED_BY.map(({ label, value, className }) => (
               <TableHead
                 key={value}
                 className={cn("font-semibold bg-black/5 w-10", className)}
@@ -101,6 +92,14 @@ async function IssuesTable({
           ))}
         </TableBody>
       </Table>
+      {/* <IssuesPagination take={0} skip={0} totalArticles={issues.length} /> */}
+      <IssuesPagination
+        itemCount={issues.length}
+        pageSize={4}
+        currPage={page}
+        status={status}
+        sortBy={sortBy}
+      />
     </div>
   );
 }
